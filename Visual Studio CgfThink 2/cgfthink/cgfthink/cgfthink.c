@@ -169,9 +169,9 @@ DLL_EXPORT void cgfgui_thinking_init(int* ptr_stop_thinking)
 
 	// PRT()情報を表示するためのコンソールを起動する。
 	AllocConsole();		// この行をコメントアウトすればコンソールは表示されません。
-	SetConsoleTitle("CgfgobanDLL Infomation Window");
+	SetConsoleTitle(L"CgfgobanDLL Infomation Window");
 	hOutput = GetStdHandle(STD_OUTPUT_HANDLE);
-	PRT("デバッグ用の窓です。PRT()関数で出力できます。\n");
+	PRT(L"デバッグ用の窓です。PRT()関数で出力できます。\n");
 
 	// この下に、メモリの確保など必要な場合のコードを記述してください。
 }
@@ -232,8 +232,8 @@ DLL_EXPORT int cgfgui_thinking(
 	else                  col = WHITE;
 	ret_z = think_sample(col);
 
-	PRT("思考時間：先手=%d秒、後手=%d秒\n", sg_time[0], sg_time[1]);
-	PRT("着手=(%2d,%2d)(%04x), 手数=%d,手番=%d,盤size=%d,komi=%.1f\n", (ret_z & 0xff), (ret_z >> 8), ret_z, dll_tesuu, dll_black_turn, dll_board_size, dll_komi);
+	PRT(L"思考時間：先手=%d秒、後手=%d秒\n", sg_time[0], sg_time[1]);
+	PRT(L"着手=(%2d,%2d)(%04x), 手数=%d,手番=%d,盤size=%d,komi=%.1f\n", (ret_z & 0xff), (ret_z >> 8), ret_z, dll_tesuu, dll_black_turn, dll_board_size, dll_komi);
 	//	print_board();
 	return ret_z;
 }
@@ -276,7 +276,7 @@ int think_sample(int col)
 			kou_z = kz;
 			if (flag == MOVE_SUICIDE) continue;	// 自殺手
 		}
-		//		PRT("x,y=(%d,%d)=%d\n",x,y,value);
+		//		PRT(L"x,y=(%d,%d)=%d\n",x,y,value);
 		if (value > max) { max = value; ret_z = z; }
 	}
 	return ret_z;
@@ -286,12 +286,12 @@ int think_sample(int col)
 void print_board(void)
 {
 	int x, y, z;
-	char* str[4] = { "・","●","○","＋" };
+	char* str[4] = { L"・", L"●", L"○", L"＋" };
 
 	for (y = 0; y < board_size + 2; y++) for (x = 0; x < board_size + 2; x++) {
 		z = (y + 0) * 256 + (x + 0);
-		PRT("%s", str[board[z]]);
-		if (x == board_size + 1) PRT("\n");
+		PRT(L"%s", str[board[z]]);
+		if (x == board_size + 1) PRT(L"\n");
 	}
 }
 
@@ -318,7 +318,7 @@ int endgame_status(int endgame_board[])
 		else {
 			*p = GTP_ALIVE;
 			count_dame(z);
-			//			PRT("(%2d,%2d),ishi=%2d,dame=%2d\n",z&0xff,z>>8,ishi,dame);
+			//			PRT(L"(%2d,%2d),ishi=%2d,dame=%2d\n",z&0xff,z>>8,ishi,dame);
 			if (dame <= 1) *p = GTP_DEAD;
 		}
 	}
@@ -418,11 +418,11 @@ int move_one(int z, int col)
 		return MOVE_SUCCESS;
 	}
 	if (z == kou_z) {
-		PRT("move() Err: コウ！z=%04x\n", z);
+		PRT(L"move() Err: コウ！z=%04x\n", z);
 		return MOVE_KOU;
 	}
 	if (board[z] != 0) {
-		PRT("move() Err: 空点ではない！z=%04x\n", z);
+		PRT(L"move() Err: 空点ではない！z=%04x\n", z);
 		return MOVE_EXIST;
 	}
 	board[z] = col;	// とりあえず置いてみる
@@ -442,7 +442,7 @@ int move_one(int z, int col)
 	// 自殺手を判定
 	count_dame(z);
 	if (dame == 0) {
-		PRT("move() Err: 自殺手! z=%04x\n", z);
+		PRT(L"move() Err: 自殺手! z=%04x\n", z);
 		board[z] = 0;
 		return MOVE_SUICIDE;
 	}
@@ -460,7 +460,7 @@ int move_one(int z, int col)
 			if (dame == 1 && ishi == 1) sum++;
 		}
 		if (sum >= 2) {
-			PRT("１つ取られて、コウの位置へ打つと、１つの石を2つ以上取れる？z=%04x\n", z);
+			PRT(L"１つ取られて、コウの位置へ打つと、１つの石を2つ以上取れる？z=%04x\n", z);
 			return MOVE_FATAL;
 		}
 		if (sum == 0) kou_z = 0;	// コウにはならない。

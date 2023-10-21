@@ -1,10 +1,18 @@
 ﻿  cgfthink.c
-C:\Users\むずでょ\Documents\GitHub\kifuwarabe-uec15\Visual Studio CgfThink 2\cgfthink\cgfthink\cgfthink.c(1,1): warning C4819: ファイルは、現在のコード ページ (932) で表示できない文字を含んでいます。データの損失を防ぐために、ファイルを Unicode 形式で保存してください。
-C:\Users\むずでょ\Documents\GitHub\kifuwarabe-uec15\Visual Studio CgfThink 2\cgfthink\cgfthink\cgfthink.c(172,18): warning C4133: '関数': 'char [30]' と 'LPCWSTR' の間で型に互換性がありません。
-C:\Users\むずでょ\Documents\GitHub\kifuwarabe-uec15\Visual Studio CgfThink 2\cgfthink\cgfthink\cgfthink.c(289,37): error C2061: 構文エラー: 識別子 '笳・'
-C:\Users\むずでょ\Documents\GitHub\kifuwarabe-uec15\Visual Studio CgfThink 2\cgfthink\cgfthink\cgfthink.c(289,44): error C2001: 定数が 2 行目に続いています。
-C:\Users\むずでょ\Documents\GitHub\kifuwarabe-uec15\Visual Studio CgfThink 2\cgfthink\cgfthink\cgfthink.c(291,16): warning C4552: '<': 式の結果が使用されていません
-C:\Users\むずでょ\Documents\GitHub\kifuwarabe-uec15\Visual Studio CgfThink 2\cgfthink\cgfthink\cgfthink.c(291,37): error C2143: 構文エラー: ';' が ')' の前にありません。
-C:\Users\むずでょ\Documents\GitHub\kifuwarabe-uec15\Visual Studio CgfThink 2\cgfthink\cgfthink\cgfthink.c(291,53): warning C4552: '<': 式の結果が使用されていません
-C:\Users\むずでょ\Documents\GitHub\kifuwarabe-uec15\Visual Studio CgfThink 2\cgfthink\cgfthink\cgfthink.c(291,74): error C2143: 構文エラー: ';' が ')' の前にありません。
-C:\Users\むずでょ\Documents\GitHub\kifuwarabe-uec15\Visual Studio CgfThink 2\cgfthink\cgfthink\cgfthink.c(296,1): error C2059: 構文エラー: '}'
+C:\Users\むずでょ\Documents\GitHub\kifuwarabe-uec15\Visual Studio CgfThink 2\cgfthink\cgfthink\cgfthink.c(174,6): warning C4133: '関数': 'unsigned short [27]' と 'const char *' の間で型に互換性がありません。
+C:\Users\むずでょ\Documents\GitHub\kifuwarabe-uec15\Visual Studio CgfThink 2\cgfthink\cgfthink\cgfthink.c(235,6): warning C4133: '関数': 'unsigned short [20]' と 'const char *' の間で型に互換性がありません。
+C:\Users\むずでょ\Documents\GitHub\kifuwarabe-uec15\Visual Studio CgfThink 2\cgfthink\cgfthink\cgfthink.c(236,6): warning C4133: '関数': 'unsigned short [52]' と 'const char *' の間で型に互換性がありません。
+C:\Users\むずでょ\Documents\GitHub\kifuwarabe-uec15\Visual Studio CgfThink 2\cgfthink\cgfthink\cgfthink.c(293,7): warning C4133: '関数': 'unsigned short [3]' と 'const char *' の間で型に互換性がありません。
+C:\Users\むずでょ\Documents\GitHub\kifuwarabe-uec15\Visual Studio CgfThink 2\cgfthink\cgfthink\cgfthink.c(294,32): warning C4133: '関数': 'unsigned short [2]' と 'const char *' の間で型に互換性がありません。
+C:\Users\むずでょ\Documents\GitHub\kifuwarabe-uec15\Visual Studio CgfThink 2\cgfthink\cgfthink\cgfthink.c(289,8): warning C4133: '初期化中': 'unsigned short [2]' と 'char *' の間で型に互換性がありません。
+C:\Users\むずでょ\Documents\GitHub\kifuwarabe-uec15\Visual Studio CgfThink 2\cgfthink\cgfthink\cgfthink.c(421,7): warning C4133: '関数': 'unsigned short [23]' と 'const char *' の間で型に互換性がありません。
+C:\Users\むずでょ\Documents\GitHub\kifuwarabe-uec15\Visual Studio CgfThink 2\cgfthink\cgfthink\cgfthink.c(425,7): warning C4133: '関数': 'unsigned short [27]' と 'const char *' の間で型に互換性がありません。
+C:\Users\むずでょ\Documents\GitHub\kifuwarabe-uec15\Visual Studio CgfThink 2\cgfthink\cgfthink\cgfthink.c(445,7): warning C4133: '関数': 'unsigned short [25]' と 'const char *' の間で型に互換性がありません。
+C:\Users\むずでょ\Documents\GitHub\kifuwarabe-uec15\Visual Studio CgfThink 2\cgfthink\cgfthink\cgfthink.c(463,8): warning C4133: '関数': 'unsigned short [38]' と 'const char *' の間で型に互換性がありません。
+     ライブラリ C:\Users\むずでょ\Documents\GitHub\kifuwarabe-uec15\Visual Studio CgfThink 2\cgfthink\Release\cgfthink.lib とオブジェクト C:\Users\むずでょ\Documents\GitHub\kifuwarabe-uec15\Visual Studio CgfThink 2\cgfthink\Release\cgfthink.exp を作成中
+  コード生成しています。
+  3 of 16 functions (18.8%) were compiled, the rest were copied from previous compilation.
+    0 functions were new in current compilation
+    1 functions had inline decision re-evaluated but remain unchanged
+  コード生成が終了しました。
+  cgfthink.vcxproj -> C:\Users\むずでょ\Documents\GitHub\kifuwarabe-uec15\Visual Studio CgfThink 2\cgfthink\Release\cgfthink.dll

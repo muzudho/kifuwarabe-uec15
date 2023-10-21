@@ -16,6 +16,14 @@
 
 `cgfthink.h` が上手く読み込めない場合は、 `#include "cgfthink.h"` の箇所に　そのファイルの内容をベタ書きする  
 
+## cgfthink.c ファイルのエンコード
+
+UTF-8 with BOM  
+
+## CgfGoBanで cgfthink.dll を使って対局するときは
+
+`Computer(GTP)` ではなく `Computer(DLL)` を選ぶ  
+
 ## const char*
 
 Original:  
@@ -235,5 +243,3 @@ Original:
 ```c++
 	strcpy(lpStr,SgfBuf);
 ```
-
-
