@@ -255,11 +255,27 @@ DLL_EXPORT int cgfgui_thinking(
 	if (dll_endgame_type == GAME_DRAW_FIGURE) return endgame_draw_figure(dll_endgame_board);
 	if (dll_endgame_type == GAME_DRAW_NUMBER) return endgame_draw_number(dll_endgame_board);
 
-	// 最後の相手の手
-	int last_z = dll_kifu[dll_tesuu - 1][0];
-	PRT(L"最後の手　x：%d　y：%d", get_x(last_z), get_y(last_z));
+	if (dll_tesuu == 0) {
+		// 自分が先手なら天元に打つ
+		ret_z = get_z(10, 10);
+	}
+	else
+	{
+		// 最後の相手の手
+		int last_z = dll_kifu[dll_tesuu - 1][0];
+		PRT(L"最後の手　x：%d　y：%d", get_x(last_z), get_y(last_z));
 
-	ret_z = get_mirror_z(last_z);
+		int x = get_x(last_z);
+		int y = get_y(last_z);
+
+		if (x == 10 && y == 10) {
+			// 相手に天元に打たれてしまったらPass
+			ret_z = 0;
+		}
+		else {
+			ret_z = get_mirror_z(last_z);
+		}
+	}
 
 	// サンプルの思考ルーチンを呼ぶ
 	//if (dll_black_turn) col = BLACK;
