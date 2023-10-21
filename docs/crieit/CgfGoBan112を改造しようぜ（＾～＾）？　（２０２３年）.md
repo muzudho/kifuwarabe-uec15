@@ -24,6 +24,34 @@ UTF-8 with BOM
 
 `Computer(GTP)` ではなく `Computer(DLL)` を選ぶ  
 
+## 文字化けを直す
+
+以下のように直せばいいが、関連する他の箇所も直さないといけない。自力で頑張って欲しい。説明省略  
+
+```cpp
+// printf()の代用関数。
+void PRT(const wchar_t* fmt, ...)
+{
+	// 可変長引数か？
+	va_list ap;
+
+	int len;
+	static wchar_t text[PRT_LEN_MAX];
+	DWORD nw;
+
+	if (hOutput == INVALID_HANDLE_VALUE) return;
+	va_start(ap, fmt);
+
+	len = _vsnwprintf_s(text, PRT_LEN_MAX - 1, _TRUNCATE, fmt, ap);
+	va_end(ap);
+
+	if (len < 0 || len >= PRT_LEN_MAX) return;
+
+	WriteConsole(hOutput, text, (DWORD)wcslen(text), &nw, NULL);
+}
+```
+
+
 ## const char*
 
 Original:  
@@ -77,7 +105,11 @@ len = _vsnprintf_s(text, PRT_LEN_MAX - 1, _TRUNCATE, fmt, ap);
 
 # cgfgoban
 
+**大変なのでcgfgoban.cppは改造しない方がいい**  
+
 ## st
+
+**大変なのでcgfgoban.cppは改造しない方がいい**  
 
 Original:  
 
@@ -94,6 +126,8 @@ Refactoring:
 他同様
 
 ## sBC
+
+**大変なのでcgfgoban.cppは改造しない方がいい**  
 
 Original:  
 
@@ -135,6 +169,8 @@ L"└",L"┴",L"┘",
 
 ## PRT
 
+**大変なのでcgfgoban.cppは改造しない方がいい**  
+
 Original:  
 
 ```c++
@@ -148,6 +184,8 @@ void PRT(const char *fmt, ...);		// 可変のリストを持つprintf代用関�
 ```
 
 ## 文字列
+
+**大変なのでcgfgoban.cppは改造しない方がいい**  
 
 Original:  
 
@@ -166,6 +204,8 @@ Refactoring:
 
 ## LPSTR, LPWSTR
 
+**大変なのでcgfgoban.cppは改造しない方がいい**  
+
 Original:  
 
 ```c++
@@ -182,6 +222,8 @@ Refactoring:
 他同様
 
 ## char xTmp[256]
+
+**大変なのでcgfgoban.cppは改造しない方がいい**  
 
 Original:  
 
@@ -238,8 +280,12 @@ Refactoring:
 
 ## strcpy
 
+**大変なのでcgfgoban.cppは改造しない方がいい**  
+
 Original:  
 
 ```c++
 	strcpy(lpStr,SgfBuf);
 ```
+
+.

@@ -76,7 +76,7 @@ enum GtpStatusType {
 
 
 // サンプルで使用する関数
-void PRT(const char* fmt, ...);	// printf()の代用関数。コンソールに出力。
+void PRT(const wchar_t* fmt, ...);	// printf()の代用関数。コンソールに出力。
 void PassWindowsSystem(void);	// 一時的にWindowsに制御を渡します。
 
 
@@ -143,20 +143,24 @@ void PassWindowsSystem(void)
 static HANDLE hOutput = INVALID_HANDLE_VALUE;	// コンソールに出力するためのハンドル
 
 // printf()の代用関数。
-void PRT(const char* fmt, ...)
+void PRT(const wchar_t* fmt, ...)
 {
+	// 可変長引数か？
 	va_list ap;
+
 	int len;
-	static char text[PRT_LEN_MAX];
+	static wchar_t text[PRT_LEN_MAX];
 	DWORD nw;
 
 	if (hOutput == INVALID_HANDLE_VALUE) return;
 	va_start(ap, fmt);
-	len = _vsnprintf_s(text, PRT_LEN_MAX - 1, _TRUNCATE, fmt, ap);
+
+	len = _vsnwprintf_s(text, PRT_LEN_MAX - 1, _TRUNCATE, fmt, ap);
 	va_end(ap);
 
 	if (len < 0 || len >= PRT_LEN_MAX) return;
-	WriteConsole(hOutput, text, (DWORD)strlen(text), &nw, NULL);
+
+	WriteConsole(hOutput, text, (DWORD)wcslen(text), &nw, NULL);
 }
 
 
@@ -286,7 +290,7 @@ int think_sample(int col)
 void print_board(void)
 {
 	int x, y, z;
-	char* str[4] = { L"・", L"●", L"○", L"＋" };
+	wchar_t* str[4] = { L"・", L"●", L"○", L"＋" };
 
 	for (y = 0; y < board_size + 2; y++) for (x = 0; x < board_size + 2; x++) {
 		z = (y + 0) * 256 + (x + 0);
