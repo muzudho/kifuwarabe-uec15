@@ -188,6 +188,18 @@ DLL_EXPORT void cgfgui_thinking_close(void)
 	// この下に、メモリの解放など必要な場合のコードを記述してください。
 }
 
+// z を x へ
+int get_x(int z)
+{
+	return z % 256;
+}
+
+// z を y へ
+int get_y(int z)
+{
+	return (z / 256);
+}
+
 // 思考ルーチン。次の1手を返す。
 // 本体から初期盤面、棋譜、手数、手番、盤のサイズ、コミ、が入った状態で呼ばれる。
 DLL_EXPORT int cgfgui_thinking(
@@ -230,6 +242,10 @@ DLL_EXPORT int cgfgui_thinking(
 	if (dll_endgame_type == GAME_END_STATUS) return endgame_status(dll_endgame_board);
 	if (dll_endgame_type == GAME_DRAW_FIGURE) return endgame_draw_figure(dll_endgame_board);
 	if (dll_endgame_type == GAME_DRAW_NUMBER) return endgame_draw_number(dll_endgame_board);
+
+	// 最後の相手の手
+	int last_z = dll_kifu[dll_tesuu - 1][0];
+	PRT(L"最後の手　x：%d　y：%d", get_x(last_z), get_y(last_z));
 
 	// サンプルの思考ルーチンを呼ぶ
 	if (dll_black_turn) col = BLACK;
