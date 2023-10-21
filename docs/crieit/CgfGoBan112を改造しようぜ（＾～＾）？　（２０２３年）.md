@@ -94,9 +94,10 @@ Original:
 Refactoring:  
 
 ```cpp
-// 関数名の末尾に _s が付いた
-// _TRUNCATE という引数が増えた
-len = _vsnprintf_s(text, PRT_LEN_MAX - 1, _TRUNCATE, fmt, ap);
+    // 関数名に w が含まれ、末尾に _s が付いた
+    // _TRUNCATE という引数が増えた
+    len = _vsnwprintf_s(text, PRT_LEN_MAX - 1, _TRUNCATE, fmt, ap);
+
 ```
 
 ## Fail GetProcAddress() .. 2
