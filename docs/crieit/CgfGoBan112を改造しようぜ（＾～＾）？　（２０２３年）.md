@@ -12,6 +12,10 @@
 
 アプリケーション（ `.exe` ）ではなく **ダイナミック ライブラリ** （ `.dll` ）に変更  
 
+## ヘッダーファイルが読み込めない場合
+
+`cgfthink.h` が上手く読み込めない場合は、 `#include "cgfthink.h"` の箇所に　そのファイルの内容をベタ書きする  
+
 ## const char*
 
 Original:  
@@ -222,7 +226,14 @@ Refactoring:
 			for (k=0;k<SBC_NUM;k++) if ( wcsncmp(p,sBC[k],2) == 0 ) break;
 ```
 
-芋づる式に変える  
+芋づる式に変える
 
+## strcpy
+
+Original:  
+
+```c++
+	strcpy(lpStr,SgfBuf);
+```
 
 

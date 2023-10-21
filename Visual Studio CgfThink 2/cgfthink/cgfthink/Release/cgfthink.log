@@ -1,0 +1,10 @@
+﻿  cgfthink.c
+C:\Users\むずでょ\Documents\GitHub\kifuwarabe-uec15\Visual Studio CgfThink 2\cgfthink\cgfthink\cgfthink.c(1,1): warning C4819: ファイルは、現在のコード ページ (932) で表示できない文字を含んでいます。データの損失を防ぐために、ファイルを Unicode 形式で保存してください。
+C:\Users\むずでょ\Documents\GitHub\kifuwarabe-uec15\Visual Studio CgfThink 2\cgfthink\cgfthink\cgfthink.c(172,18): warning C4133: '関数': 'char [30]' と 'LPCWSTR' の間で型に互換性がありません。
+C:\Users\むずでょ\Documents\GitHub\kifuwarabe-uec15\Visual Studio CgfThink 2\cgfthink\cgfthink\cgfthink.c(289,37): error C2061: 構文エラー: 識別子 '笳・'
+C:\Users\むずでょ\Documents\GitHub\kifuwarabe-uec15\Visual Studio CgfThink 2\cgfthink\cgfthink\cgfthink.c(289,44): error C2001: 定数が 2 行目に続いています。
+C:\Users\むずでょ\Documents\GitHub\kifuwarabe-uec15\Visual Studio CgfThink 2\cgfthink\cgfthink\cgfthink.c(291,16): warning C4552: '<': 式の結果が使用されていません
+C:\Users\むずでょ\Documents\GitHub\kifuwarabe-uec15\Visual Studio CgfThink 2\cgfthink\cgfthink\cgfthink.c(291,37): error C2143: 構文エラー: ';' が ')' の前にありません。
+C:\Users\むずでょ\Documents\GitHub\kifuwarabe-uec15\Visual Studio CgfThink 2\cgfthink\cgfthink\cgfthink.c(291,53): warning C4552: '<': 式の結果が使用されていません
+C:\Users\むずでょ\Documents\GitHub\kifuwarabe-uec15\Visual Studio CgfThink 2\cgfthink\cgfthink\cgfthink.c(291,74): error C2143: 構文エラー: ';' が ')' の前にありません。
+C:\Users\むずでょ\Documents\GitHub\kifuwarabe-uec15\Visual Studio CgfThink 2\cgfthink\cgfthink\cgfthink.c(296,1): error C2059: 構文エラー: '}'
