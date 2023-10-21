@@ -200,6 +200,18 @@ int get_y(int z)
 	return (z / 256);
 }
 
+// 最後の手に対して、９０°回転したところを返す
+int get_mirror_z(int last_z)
+{
+	int x = get_x(last_z);
+	int y = get_y(last_z);
+
+	int new_x = y - 1;
+	int new_y = 19 - x;
+
+	return get_z(new_x, new_y);
+}
+
 // 思考ルーチン。次の1手を返す。
 // 本体から初期盤面、棋譜、手数、手番、盤のサイズ、コミ、が入った状態で呼ばれる。
 DLL_EXPORT int cgfgui_thinking(
@@ -247,10 +259,12 @@ DLL_EXPORT int cgfgui_thinking(
 	int last_z = dll_kifu[dll_tesuu - 1][0];
 	PRT(L"最後の手　x：%d　y：%d", get_x(last_z), get_y(last_z));
 
+	ret_z = get_mirror_z(last_z);
+
 	// サンプルの思考ルーチンを呼ぶ
-	if (dll_black_turn) col = BLACK;
-	else                  col = WHITE;
-	ret_z = think_sample(col);
+	//if (dll_black_turn) col = BLACK;
+	//else                  col = WHITE;
+	//ret_z = think_sample(col);
 
 	PRT(L"思考時間：先手=%d秒、後手=%d秒\n", sg_time[0], sg_time[1]);
 	PRT(L"着手=(%2d,%2d)(%04x), 手数=%d,手番=%d,盤size=%d,komi=%.1f\n", (ret_z & 0xff), (ret_z >> 8), ret_z, dll_tesuu, dll_black_turn, dll_board_size, dll_komi);
