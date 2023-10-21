@@ -79,6 +79,8 @@ Refactoring:
 	const char *st[5] = { "＋","●","○","★","☆" };	// 埋まったのが黒。空洞が白
 ```
 
+他同様
+
 ## sBC
 
 Original:  
@@ -102,22 +104,22 @@ static char *sBC[SBC_NUM] = {
 Refactoring:  
 
 ```c++
-static const char *sBC[SBC_NUM] = {
-"●","◆","★",
-"○","◇","☆","◯",	// 0x819b, 0x81fc,コードが違う。
-"┏","┯","┓",
-"┠","┼","┨",
-"┗","┷","┛",
-"・","－","＋",
-"｜","－","＋",
-"┌","┬","┐",
-"├","╋","┤",
-"└","┴","┘",
+static const wchar_t *sBC[SBC_NUM] = {
+L"●",L"◆",L"★",
+L"○",L"◇",L"☆",L"◯",	// 0x819b, 0x81fc,コードが違う。
+L"┏",L"┯",L"┓",
+L"┠",L"┼",L"┨",
+L"┗",L"┷",L"┛",
+L"・",L"－",L"＋",
+L"｜",L"－",L"＋",
+L"┌",L"┬",L"┐",
+L"├",L"╋",L"┤",
+L"└",L"┴",L"┘",
 			
 };
 ```
 
-他同様
+他同様  
 
 ## PRT
 
@@ -147,4 +149,80 @@ Refactoring:
     // 文字列の頭に L を付けた
 	MessageBox( ghWindow, L"CgfGoBan's Internal Error!\nIf you push OK, Program will be terminated by force.", L"Debug!", MB_OK);
 ```
+
+他同様  
+
+## LPSTR, LPWSTR
+
+Original:  
+
+```c++
+	LPSTR lpStr;
+```
+
+Refactoring:  
+
+```c++
+    // W が付いている方に思い切って変える
+	LPWSTR lpwStr;
+```
+
+他同様
+
+## char xTmp[256]
+
+Original:  
+
+```c++
+	char sTmp[256];
+```
+
+Refactoring:  
+
+```c++
+    // 仕方ないので、思い切って変える
+	wchar_t sTmp[256];
+```
+
+Original:  
+
+```c++
+	sprintf( sTmp,"%d手",tesuu);
+```
+
+Refactoring:  
+
+```c++
+	wsprintf( sTmp,L"%d手",tesuu);
+```
+
+Original:  
+
+```c++
+	nLen = strlen( lpwStr );
+```
+
+Refactoring:  
+
+```c++
+	nLen = wcslen( lpwStr );
+```
+
+📖　[vsnprintf_s, _vsnprintf_s, _vsnprintf_s_l, _vsnwprintf_s, _vsnwprintf_s_l](https://learn.microsoft.com/ja-jp/cpp/c-runtime-library/reference/vsnprintf-s-vsnprintf-s-vsnprintf-s-l-vsnwprintf-s-vsnwprintf-s-l?view=msvc-170)  
+
+Original:  
+
+```c++
+			for (k=0;k<SBC_NUM;k++) if ( strncmp(p,sBC[k],2) == 0 ) break;
+```
+
+Refactoring:  
+
+```c++
+			for (k=0;k<SBC_NUM;k++) if ( wcsncmp(p,sBC[k],2) == 0 ) break;
+```
+
+芋づる式に変える  
+
+
 
