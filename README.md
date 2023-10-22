@@ -4,10 +4,10 @@
 
 ## ソースコード
 
-* 📂 `Visual Studio For CgfThink/cgfthink/cgfthink/cgfthink.c`
+* 📂 `Visual Studio For CgfThink/cgfthink/cgfthink` 📄 `cgfthink.c`
 
 ヘッダファイルはなく `.c` にヘッダファイルの内容を　埋め込んであります  
 
 ## その他
 
-* `Refactoring cgfthink_c` - `CgfGoBan112` に添付の `cgfthink.c` をリファクタリングしただけのもの
+* 📂 `Refactoring cgfthink_c` 📄 `cgfthink.c` - `CgfGoBan112` に添付の `cgfthink.c` をリファクタリングしただけのもの
