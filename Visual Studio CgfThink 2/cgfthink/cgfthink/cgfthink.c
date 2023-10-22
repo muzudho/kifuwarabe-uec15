@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
+#include <math.h>
 
 #include <windows.h>
 
@@ -238,6 +239,15 @@ int is_tengen(int x, int y) {
     return x == 9 && y == 9;
 }
 
+// 大きい数から小さい数を引く
+int subtract_small_from_large(int a, int b) {
+    if (a <= b) {
+        return b - a;
+    }
+
+    return a - b;
+}
+
 // 中間点に飛ぶ。４象限によって丸め方が異なる
 // 単調に天元に向かって丸める
 //
@@ -260,36 +270,37 @@ int get_middle(int jump_z_backup[]) {
     int ret_z;
 
     // ４象限に分ける。境目は x は [9。 y は (9
+    // 割り算は　０の方に丸められるので、負の無限大の方に丸められるように注意すること
     if (middle_y <= 9.0) {
         if (middle_x < 9.0) {
             //  ＩＩＩ象限
-            ret_x = (c_x - b_x) / 2 + b_x;
-            ret_y = (int)ceil((double)(c_y - b_y) / 2.0 + b_y);
+            ret_x = (int)ceil((double)subtract_small_from_large(c_x, b_x) / 2.0) + min(b_x, c_x);
+            ret_y = (int)ceil((double)subtract_small_from_large(c_y, b_y) / 2.0) + min(b_y, c_y);
             ret_z = get_z(ret_x, ret_y);
             PRT(L"（x:%2d y:%2d）　中間点（ＩＩＩ）　（x:%2d y:%2d）→（x:%2d y:%2d）\n", get_x(ret_z), get_y(ret_z), b_x, b_y, c_x, c_y);
         }
         else {
             //　ＩＶ象限
-            ret_x = (int)ceil((double)(c_x - b_x) / 2.0 + b_x);
-            ret_y = (int)ceil((double)(c_y - b_y) / 2.0 + b_y);
+            ret_x = subtract_small_from_large(c_x, b_x) / 2 + min(b_x, c_x);
+            ret_y = (int)ceil((double)subtract_small_from_large(c_y, b_y) / 2.0) + min(b_y, c_y);
             ret_z = get_z(ret_x, ret_y);
             PRT(L"（x:%2d y:%2d）　中間点（ＩＶ）　（x:%2d y:%2d）→（x:%2d y:%2d）\n", get_x(ret_z), get_y(ret_z), b_x, b_y, c_x, c_y);
         }
     }
     else {
         if (middle_x < 9.0) {
-            // Ｉ象限
-            ret_x = (int)ceil((double)(c_x - b_x) / 2.0 + b_x);
-            ret_y = (c_y - b_y) / 2 + b_y;
-            ret_z = get_z(ret_x, ret_y);
-            PRT(L"（x:%2d y:%2d）　中間点（Ｉ）　（x:%2d y:%2d）→（x:%2d y:%2d）\n", get_x(ret_z), get_y(ret_z), b_x, b_y, c_x, c_y);
-        }
-        else {
             // ＩＩ象限
-            ret_x = (c_x - b_x) / 2 + b_x;
-            ret_y = (c_y - b_y) / 2 + b_y;
+            ret_x = (int)ceil((double)subtract_small_from_large(c_x, b_x) / 2.0) + min(b_x, c_x);
+            ret_y = subtract_small_from_large(c_y, b_y) / 2 + min(b_y, c_y);
             ret_z = get_z(ret_x, ret_y);
             PRT(L"（x:%2d y:%2d）　中間点（ＩＩ）　（x:%2d y:%2d）→（x:%2d y:%2d）\n", get_x(ret_z), get_y(ret_z), b_x, b_y, c_x, c_y);
+        }
+        else {
+            // Ｉ象限
+            ret_x = subtract_small_from_large(c_x, b_x) / 2 + min(b_x, c_x);
+            ret_y = subtract_small_from_large(c_y, b_y) / 2 + min(b_y, c_y);
+            ret_z = get_z(ret_x, ret_y);
+            PRT(L"（x:%2d y:%2d）　中間点（Ｉ）　（x:%2d y:%2d）→（x:%2d y:%2d）\n", get_x(ret_z), get_y(ret_z), b_x, b_y, c_x, c_y);
         }
     }
 
