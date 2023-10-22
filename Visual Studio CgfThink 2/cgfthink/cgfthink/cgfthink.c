@@ -217,40 +217,21 @@ int can_put(int dll_black_turn, int ret_z) {
     if (board[ret_z] == 0) {
         // 石の上に置くわけでなければＯＫ。ただし...
 
-        int ret_x = get_x(ret_z);
-        int ret_y = get_y(ret_z);
+        count_dame(ret_z);
 
-        // TODO 自殺手防止
-        // ジャンプ先の４方向に　空きマスか、自分の石があればＯＫ
-        int up = board[get_z(ret_x, ret_y - 1)];
-        int right = board[get_z(ret_x + 1, ret_y)];
-        int down = board[get_z(ret_x, ret_y + 1)];
-        int left = board[get_z(ret_x - 1, ret_y)];
-
-        int empty = 0;
-        int same_color;
-        if (dll_black_turn) {
-            // 黒
-            same_color = 1;
-        }
-        else {
-            // 白
-            same_color = 2;
-        }
-
-        PRT(L"ret_x:%d, ret_y:%d, up:%d, right:%d, down:%d, left:%d, same_color:%d\n", ret_x, ret_y, up, right, down, left, same_color);
-
-        if (up == empty || up == same_color ||
-            right == empty || right == same_color ||
-            down == empty || down == same_color ||
-            left == empty || left == same_color) {
-
-            // ジャンプのループから抜ける
+        if (dame != 0) {
+            // 自殺手ではない
             return 1;
         }
     }
 
+    // 石の上に置いたか、自殺手だったら
     return 0;
+}
+
+// 天元か？
+int is_tengen(int x, int y) {
+    return x == 9 && y == 9;
 }
 
 // 思考ルーチン。次の1手を返す。
@@ -320,9 +301,13 @@ DLL_EXPORT int cgfgui_thinking(
                     int last_x = get_x(last_z);
                     int last_y = get_y(last_z);
 
-                    if (last_x == 10 && last_y == 10) {
-                        // 相手に天元に打たれてしまったらPass
+                    // 相手に天元に打たれてしまったら
+                    if (is_tengen(last_x, last_y)) {
+                        // Pass
                         ret_z = 0;
+
+                        // 打ち手を探すループから抜ける
+                        goto loop_end;
                     }
                     else {
                         ret_z = get_mirror_z(last_z);
@@ -359,7 +344,7 @@ DLL_EXPORT int cgfgui_thinking(
                     int ret_x = get_x(ret_z);
                     int ret_y = get_y(ret_z);
 
-                    if (ret_x == 9 && ret_y == 9) {
+                    if (is_tengen(ret_x, ret_y)) {
                         // パス
                         ret_z = 0;
 
