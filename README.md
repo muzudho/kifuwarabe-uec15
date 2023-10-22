@@ -1,8 +1,12 @@
 # kifuwarabe-uec15
 
-## 第15回UEC杯コンピュータ囲碁大会　きふわらべ
+第15回UEC杯コンピュータ囲碁大会　きふわらべ　　
 
-* 📂 `Visual Studio For CgfThink/cgfthink`
+## ソースコード
+
+* 📂 `Visual Studio For CgfThink/cgfthink/cgfthink/cgfthink.c`
+
+ヘッダファイルはなく `.c` にヘッダファイルの内容を　埋め込んであります  
 
 ## その他
 
