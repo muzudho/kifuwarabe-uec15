@@ -213,25 +213,87 @@ int get_mirror_z(int last_z)
 }
 
 // 置けるかどうか判定
-int can_put(int dll_black_turn, int ret_z) {
-    if (board[ret_z] == 0) {
-        // 石の上に置くわけでなければＯＫ。ただし...
+int can_put(int ret_z) {
+    if (board[ret_z] != 0) {
+        // 石の上には置けない
+        PRT(L"（x:%2d y:%2d）　石の上には置けない\n", get_x(ret_z), get_y(ret_z));
+        return 0;
+    }
+       
+    // 石の上に置くわけでなければＯＫ。ただし...
+    count_dame(ret_z);
 
-        count_dame(ret_z);
-
-        if (dame != 0) {
-            // 自殺手ではない
-            return 1;
-        }
+    if (dame == 0) {
+        // 呼吸できないところには置けない
+        PRT(L"（x:%2d y:%2d）　呼吸できないところには置けない\n", get_x(ret_z), get_y(ret_z));
+        return 0;
     }
 
-    // 石の上に置いたか、自殺手だったら
-    return 0;
+    // 置けない理由がないから置ける
+    return 1;
 }
 
 // 天元か？
 int is_tengen(int x, int y) {
     return x == 9 && y == 9;
+}
+
+// 中間点に飛ぶ。４象限によって丸め方が異なる
+// 単調に天元に向かって丸める
+//
+// ＧＵＩでは、Y軸が上下逆であることに注意
+// （ＩＩＩ）　（ＩＶ）
+// （ＩＩ）　　（Ｉ）
+//
+int get_middle(int jump_z_backup[]) {
+    // ループの都合上、ＤＡの中間点を求めれば、次のループでＡＢの中間点から始まる
+    int b_x = get_x(jump_z_backup[3]);
+    int b_y = get_y(jump_z_backup[3]);
+    int c_x = get_x(jump_z_backup[0]);
+    int c_y = get_y(jump_z_backup[0]);
+
+    double middle_x = (double)(c_x - b_x) / 2.0 + b_x;
+    double middle_y = (double)(c_y - b_y) / 2.0 + b_y;
+
+    int ret_x;
+    int ret_y;
+    int ret_z;
+
+    // ４象限に分ける。境目は x は [9。 y は (9
+    if (middle_y <= 9.0) {
+        if (middle_x < 9.0) {
+            //  ＩＩＩ象限
+            ret_x = (c_x - b_x) / 2 + b_x;
+            ret_y = (int)ceil((double)(c_y - b_y) / 2.0 + b_y);
+            ret_z = get_z(ret_x, ret_y);
+            PRT(L"（x:%2d y:%2d）　中間点（ＩＩＩ）　（x:%2d y:%2d）→（x:%2d y:%2d）\n", get_x(ret_z), get_y(ret_z), b_x, b_y, c_x, c_y);
+        }
+        else {
+            //　ＩＶ象限
+            ret_x = (int)ceil((double)(c_x - b_x) / 2.0 + b_x);
+            ret_y = (int)ceil((double)(c_y - b_y) / 2.0 + b_y);
+            ret_z = get_z(ret_x, ret_y);
+            PRT(L"（x:%2d y:%2d）　中間点（ＩＶ）　（x:%2d y:%2d）→（x:%2d y:%2d）\n", get_x(ret_z), get_y(ret_z), b_x, b_y, c_x, c_y);
+        }
+    }
+    else {
+        if (middle_x < 9.0) {
+            // Ｉ象限
+            ret_x = (int)ceil((double)(c_x - b_x) / 2.0 + b_x);
+            ret_y = (c_y - b_y) / 2 + b_y;
+            ret_z = get_z(ret_x, ret_y);
+            PRT(L"（x:%2d y:%2d）　中間点（Ｉ）　（x:%2d y:%2d）→（x:%2d y:%2d）\n", get_x(ret_z), get_y(ret_z), b_x, b_y, c_x, c_y);
+        }
+        else {
+            // ＩＩ象限
+            ret_x = (c_x - b_x) / 2 + b_x;
+            ret_y = (c_y - b_y) / 2 + b_y;
+            ret_z = get_z(ret_x, ret_y);
+            PRT(L"（x:%2d y:%2d）　中間点（ＩＩ）　（x:%2d y:%2d）→（x:%2d y:%2d）\n", get_x(ret_z), get_y(ret_z), b_x, b_y, c_x, c_y);
+        }
+    }
+
+    return ret_z;
 }
 
 // 思考ルーチン。次の1手を返す。
@@ -296,7 +358,7 @@ DLL_EXPORT int cgfgui_thinking(
             for (;;) {
                 for (int jump = 0; jump < 4; jump++) {
 
-                    PRT(L"最後の手　x：%d　y：%d\n", get_x(last_z), get_y(last_z));
+                    PRT(L"（x:%2d y:%2d）　最後の手\n", get_x(last_z), get_y(last_z));
 
                     int last_x = get_x(last_z);
                     int last_y = get_y(last_z);
@@ -307,54 +369,33 @@ DLL_EXPORT int cgfgui_thinking(
                         ret_z = 0;
 
                         // 打ち手を探すループから抜ける
+                        PRT(L"天元にミラー手はできないから終わり");
                         goto loop_end;
                     }
                     else {
+                        // 単調に天元に向かっていくはず
                         ret_z = get_mirror_z(last_z);
+                        PRT(L"（x:%2d y:%2d）　通常ミラー手\n", get_x(ret_z), get_y(ret_z));
                     }
 
                     jump_z_backup[jump] = ret_z;
 
-                    if (can_put(dll_black_turn, ret_z)) {
+                    if (can_put(ret_z)) {
                         // 打ち手を探すループから抜ける
                         goto loop_end;
                     }
 
-                    // そうでなければ　繰り返しジャンプ
+                    // そうでなければ、打てなかった手を最後の手とみなして、繰り返しジャンプ
+                    PRT(L"打てなかった手を最後の手とみなして、繰り返しジャンプ\n");
                     last_z = ret_z;
                 }
 
-                if (board[ret_z] != 0) {
-                    // 永遠ジャンプするなら
+                // 永遠にジャンプすることになった
 
-                    // 中間点へ飛ぶ
-                    int b_x = get_x(jump_z_backup[0]);
-                    int b_y = get_y(jump_z_backup[0]);
-                    int c_x = get_x(jump_z_backup[1]);
-                    int c_y = get_y(jump_z_backup[1]);
-
-                    int ret_x = (c_x - b_x) / 2 + b_x;
-                    int ret_y = (c_y - b_y) / 2 + b_y;
-                    ret_z = get_z(ret_x, ret_y);
-                }
-
-                // それでも石を置けないなら
-                if (!can_put(dll_black_turn, ret_z)) {
-                    // 天元か？
-                    int ret_x = get_x(ret_z);
-                    int ret_y = get_y(ret_z);
-
-                    if (is_tengen(ret_x, ret_y)) {
-                        // パス
-                        ret_z = 0;
-
-                        // 打ち手を探すループから抜ける
-                        goto loop_end;
-                    }
-                }
-
-                // それでもなければ、また打ち手の探し直し
-                last_z = ret_z;
+                // 次は中間点へ、打ち手の探し直し
+                PRT(L"次は中間点へ、打ち手の探し直し\n");
+                // 中間点へ飛ぶ（４象限によって丸め方は異なる）
+                last_z = get_middle(jump_z_backup);
             }
         loop_end:
             ;
