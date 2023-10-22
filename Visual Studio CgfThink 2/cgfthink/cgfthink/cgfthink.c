@@ -212,6 +212,47 @@ int get_mirror_z(int last_z)
     return get_z(new_x, new_y);
 }
 
+// 置けるかどうか判定
+int can_put(int dll_black_turn, int ret_z) {
+    if (board[ret_z] == 0) {
+        // 石の上に置くわけでなければＯＫ。ただし...
+
+        int ret_x = get_x(ret_z);
+        int ret_y = get_y(ret_z);
+
+        // TODO 自殺手防止
+        // ジャンプ先の４方向に　空きマスか、自分の石があればＯＫ
+        int up = board[get_z(ret_x, ret_y - 1)];
+        int right = board[get_z(ret_x + 1, ret_y)];
+        int down = board[get_z(ret_x, ret_y + 1)];
+        int left = board[get_z(ret_x - 1, ret_y)];
+
+        int empty = 0;
+        int same_color;
+        if (dll_black_turn) {
+            // 黒
+            same_color = 1;
+        }
+        else {
+            // 白
+            same_color = 2;
+        }
+
+        PRT(L"ret_x:%d, ret_y:%d, up:%d, right:%d, down:%d, left:%d, same_color:%d\n", ret_x, ret_y, up, right, down, left, same_color);
+
+        if (up == empty || up == same_color ||
+            right == empty || right == same_color ||
+            down == empty || down == same_color ||
+            left == empty || left == same_color) {
+
+            // ジャンプのループから抜ける
+            return 1;
+        }
+    }
+
+    return 0;
+}
+
 // 思考ルーチン。次の1手を返す。
 // 本体から初期盤面、棋譜、手数、手番、盤のサイズ、コミ、が入った状態で呼ばれる。
 DLL_EXPORT int cgfgui_thinking(
@@ -255,73 +296,87 @@ DLL_EXPORT int cgfgui_thinking(
     if (dll_endgame_type == GAME_DRAW_FIGURE) return endgame_draw_figure(dll_endgame_board);
     if (dll_endgame_type == GAME_DRAW_NUMBER) return endgame_draw_number(dll_endgame_board);
 
-    // 最後の相手の手
-    int last_z = dll_kifu[dll_tesuu - 1][0];
+    if (dll_tesuu == 0) {
+        // 自分が先手なら天元に打つ
+        ret_z = get_z(9, 9);
+    }
+    else {
+        // 最後の相手の手
+        int last_z = dll_kifu[dll_tesuu - 1][0];
 
-    for (int retry = 0; retry < 4; retry++) {
-        if (dll_tesuu == 0) {
-            // 自分が先手なら天元に打つ
-            ret_z = get_z(9, 9);
-            break;
-        }
-
-        PRT(L"最後の手　x：%d　y：%d\n", get_x(last_z), get_y(last_z));
-
-        int last_x = get_x(last_z);
-        int last_y = get_y(last_z);
-
-        if (last_x == 10 && last_y == 10) {
-            // 相手に天元に打たれてしまったらPass
+        // 相手がＰａｓｓなら自分もＰａｓｓ
+        if (last_z == 0) {
             ret_z = 0;
         }
         else {
-            ret_z = get_mirror_z(last_z);
+            int jump_z_backup[4];
+
+            // 打ち手の余地がなくなるまでループ
+            for (;;) {
+                for (int jump = 0; jump < 4; jump++) {
+
+                    PRT(L"最後の手　x：%d　y：%d\n", get_x(last_z), get_y(last_z));
+
+                    int last_x = get_x(last_z);
+                    int last_y = get_y(last_z);
+
+                    if (last_x == 10 && last_y == 10) {
+                        // 相手に天元に打たれてしまったらPass
+                        ret_z = 0;
+                    }
+                    else {
+                        ret_z = get_mirror_z(last_z);
+                    }
+
+                    jump_z_backup[jump] = ret_z;
+
+                    if (can_put(dll_black_turn, ret_z)) {
+                        // 打ち手を探すループから抜ける
+                        goto loop_end;
+                    }
+
+                    // そうでなければ　繰り返しジャンプ
+                    last_z = ret_z;
+                }
+
+                if (board[ret_z] != 0) {
+                    // 永遠ジャンプするなら
+
+                    // 中間点へ飛ぶ
+                    int b_x = get_x(jump_z_backup[0]);
+                    int b_y = get_y(jump_z_backup[0]);
+                    int c_x = get_x(jump_z_backup[1]);
+                    int c_y = get_y(jump_z_backup[1]);
+
+                    int ret_x = (c_x - b_x) / 2 + b_x;
+                    int ret_y = (c_y - b_y) / 2 + b_y;
+                    ret_z = get_z(ret_x, ret_y);
+                }
+
+                // それでも石を置けないなら
+                if (!can_put(dll_black_turn, ret_z)) {
+                    // 天元か？
+                    int ret_x = get_x(ret_z);
+                    int ret_y = get_y(ret_z);
+
+                    if (ret_x == 9 && ret_y == 9) {
+                        // パス
+                        ret_z = 0;
+
+                        // 打ち手を探すループから抜ける
+                        goto loop_end;
+                    }
+                }
+
+                // それでもなければ、また打ち手の探し直し
+                last_z = ret_z;
+            }
+        loop_end:
+            ;
+
         }
-
-        if (board[ret_z] == 0) {
-            // 石の上に置くわけでなければＯＫ。ただし...
-
-            int ret_x = get_x(ret_z);
-            int ret_y = get_y(ret_z);
-
-            // TODO 自殺手防止
-            // ジャンプ先の４方向に　空きマスか、自分の石があればＯＫ
-            int up = board[get_z(ret_x, ret_y - 1)];
-            int right = board[get_z(ret_x + 1, ret_y)];
-            int down = board[get_z(ret_x, ret_y + 1)];
-            int left = board[get_z(ret_x - 1, ret_y)];
-
-            int empty = 0;
-            int same_color;
-            if (dll_black_turn) {
-                // 黒
-                same_color = 1;
-            }
-            else {
-                // 白
-                same_color = 2;
-            }
-
-            PRT(L"ret_x:%d, ret_y:%d, up:%d, right:%d, down:%d, left:%d, same_color:%d\n", ret_x, ret_y, up, right, down, left, same_color);
-
-            if (up == empty || up == same_color ||
-                right == empty || right == same_color ||
-                down == empty || down == same_color ||
-                left == empty || left == same_color) {
-
-                // ジャンプのループから抜ける
-                break;
-            }
-        }
-
-        // そうでなければ　繰り返しジャンプ
-        last_z = ret_z;
     }
 
-    if (board[ret_z] != 0) {
-        // 永遠ジャンプするならパスする
-        ret_z = 0;
-    }
 
 
     // サンプルの思考ルーチンを呼ぶ
