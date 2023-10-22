@@ -220,7 +220,7 @@ int can_put(int ret_z) {
         PRT(L"（x:%2d y:%2d）　石の上には置けない\n", get_x(ret_z), get_y(ret_z));
         return 0;
     }
-       
+
     // 石の上に置くわけでなければＯＫ。ただし...
     count_dame(ret_z);
 
@@ -414,12 +414,13 @@ DLL_EXPORT int cgfgui_thinking(
         }
     }
 
-
-
-    // サンプルの思考ルーチンを呼ぶ
-    //if (dll_black_turn) col = BLACK;
-    //else                  col = WHITE;
-    //ret_z = think_sample(col);
+    //// パスするぐらいだったら、山下さんのサンプルの思考ルーチンを呼ぶ
+    //if (ret_z == 0) {
+    //    if (dll_black_turn) col = BLACK;
+    //    else                col = WHITE;
+    //    ret_z = think_sample(col);
+    //    PRT(L"（x:%2d y:%2d）　パスするぐらいだったら、山下さんのサンプルの思考ルーチンを呼ぶ\n", get_x(ret_z), get_y(ret_z));
+    //}
 
     PRT(L"思考時間：先手=%d秒、後手=%d秒\n", sg_time[0], sg_time[1]);
     PRT(L"着手=(%2d,%2d)(%04x), 手数=%d,手番=%d,盤size=%d,komi=%.1f\n", (ret_z & 0xff), (ret_z >> 8), ret_z, dll_tesuu, dll_black_turn, dll_board_size, dll_komi);
