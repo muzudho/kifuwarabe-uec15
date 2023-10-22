@@ -10,4 +10,8 @@
 
 ## その他
 
-* 📂 `Refactoring cgfthink_c` 📄 `cgfthink.c` - `CgfGoBan112` に添付の `cgfthink.c` をリファクタリングしただけのもの
+* 📂 `Refactoring cgfthink_c` 📄 `cgfthink.c`
+
+`CgfGoBan112` に添付の `cgfthink.c` をリファクタリングしただけのもの  
+
+.
